@@ -1,3 +1,5 @@
+import { SalaryThreshold } from "@/components/SalaryThreshold";
+
 export default function Home() {
   return (
     <main className="flex flex-1 flex-col justify-center px-16 py-32">
@@ -9,6 +11,9 @@ export default function Home() {
         <p className="mt-6 font-serif text-5xl font-light tabular-nums">
           £31,049
         </p>
+        <div className="mt-4 w-96">
+           <SalaryThreshold salary={31049} goingRate={29970} confidence="fuzzy" />
+         </div>
         <p className="mt-4 text-sm text-ink-muted">
           Going rate for this occupation code: £29,970
         </p>
