@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 const SCALE_MIN = 18000;
 const SCALE_MAX = 45000;
 
@@ -16,16 +20,30 @@ type Props = {
   salary: number;
   goingRate: number;
   confidence?: Confidence;
+  index?: number;
 };
 
 export function SalaryThreshold({
   salary,
   goingRate,
   confidence = "confirmed",
+  index = 0,
 }: Props) {
+  const [grown, setGrown] = useState(false);
+
   const salaryPct = toPercent(salary);
   const ratePct = toPercent(goingRate);
   const clears = salary >= goingRate;
+
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setGrown(true);
+      return;
+    }
+    const timer = setTimeout(() => setGrown(true), 180 + index * 130);
+    return () => clearTimeout(timer);
+  }, [index]);
 
   const fillColour = !clears
     ? "bg-below"
@@ -43,7 +61,10 @@ export function SalaryThreshold({
       <div className="absolute top-2 left-0 right-0 h-[3px] rounded-sm bg-track" />
       <div
         className={`absolute top-2 left-0 h-[3px] rounded-sm ${fillColour}`}
-        style={{ width: `${salaryPct}%` }}
+        style={{
+          width: grown ? `${salaryPct}%` : "0%",
+          transition: "width 900ms cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
       />
       <div
         className="absolute top-0.5 h-4 w-px bg-ink"
