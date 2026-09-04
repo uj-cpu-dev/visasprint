@@ -78,3 +78,26 @@ import {
     },
     (t) => [unique().on(t.source, t.sourceId)],
   );
+
+  export const ingestionRuns = pgTable("ingestion_runs", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    source: text("source").notNull(),
+    startedAt: timestamp("started_at", { withTimezone: true }).notNull(),
+    finishedAt: timestamp("finished_at", { withTimezone: true }),
+    status: text("status").notNull(),
+    jobsFound: integer("jobs_found"),
+    jobsNew: integer("jobs_new"),
+    error: text("error"),
+  });
+  
+  export const aiUsage = pgTable("ai_usage", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    operation: text("operation").notNull(),
+    model: text("model").notNull(),
+    inputTokens: integer("input_tokens").notNull(),
+    outputTokens: integer("output_tokens").notNull(),
+    costPence: integer("cost_pence"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  });
